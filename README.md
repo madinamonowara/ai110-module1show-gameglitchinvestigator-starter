@@ -25,19 +25,20 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📝 Document Your Experience
 
-- [ ] Describe the game's purpose.
-- [ ] Detail which bugs you found.
-- [ ] Explain what fixes you applied.
+- [x] Describe the game's purpose.
+- [x] Detail which bugs you found.
+- [x] Explain what fixes you applied.
 
 ## 📸 Demo Walkthrough
 
 Describe your fixed game in numbered steps so a reader can follow along without watching a video:
 
-1. <!-- Describe this step -->
-2. <!-- Describe this step -->
-3. <!-- Describe this step -->
-4. <!-- Describe this step -->
-5. <!-- Add more steps as needed -->
+1. User enters 40 → game shows "Go HIGHER!".
+2. Attempts left drops to 7. (The hint now points the correct direction.)
+3. User enters 90 → game shows "Go LOWER!". Attempts left drops to 6.
+4. User enters 73 → "You won! The secret was 73", and the final score is displayed.
+5. User clicks New Game → a new secret is drawn, the input box is cleared, 
+6. Attempts left resets to 8, and score/history reset to zero.
 
 **Screenshot** *(optional)*: <!-- Insert a screenshot of your fixed, winning game here -->
 
@@ -46,8 +47,15 @@ Describe your fixed game in numbered steps so a reader can follow along without 
 ```
 # Paste your pytest output here, e.g.:
 # pytest tests/
-# ========================= X passed in 0.XXs =========================
-```
+====================================== test session starts ======================================
+platform darwin -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/madinamonowara/ai110-module1show-gameglitchinvestigator-starter
+plugins: anyio-4.14.0
+collected 5 items                                                                               
+
+tests/test_game_logic.py .....                                                            [100%]
+
+======================================= 5 passed in 0.02s =======================================
 
 ## 🚀 Stretch Features
 
