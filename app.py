@@ -1,6 +1,7 @@
 import random
 import streamlit as st
 
+#FIX: Refactored logic into logic_utils.py using Claude
 from logic_utils import (
     get_range_for_difficulty,
     parse_guess,
@@ -37,6 +38,7 @@ if "secret" not in st.session_state:
     st.session_state.secret = random.randint(low, high)
 
 if "attempts" not in st.session_state:
+    #FIX: start at 0 (was 1) so the counter matches the advertised attempt limit
     st.session_state.attempts = 0
 
 if "score" not in st.session_state:
@@ -48,8 +50,9 @@ if "status" not in st.session_state:
 if "history" not in st.session_state:
     st.session_state.history = []
 
-# Bumping this on "New Game" changes the text_input key, which forces
-# Streamlit to build a fresh (empty) widget instead of reusing the old value.
+#FIX:Input-field reset on New Game implemented using Claude: bumping this changes
+# the text_input key, forcing Streamlit to build a fresh (empty) widget instead
+# of reusing the old value.
 if "round_id" not in st.session_state:
     st.session_state.round_id = 0
 
@@ -69,7 +72,7 @@ with st.expander("Developer Debug Info"):
 
 raw_guess = st.text_input(
     "Enter your guess:",
-    key=f"guess_input_{difficulty}_{st.session_state.round_id}",
+    key=f"guess_input_{difficulty}_{st.session_state.round_id}",  # round_id clears field on New Game (using Claude)
 )
 
 col1, col2, col3 = st.columns(3)
@@ -81,12 +84,14 @@ with col3:
     show_hint = st.checkbox("Show hint", value=True)
 
 if new_game:
+    #FIX: fully reset game state on New Game (status, history, score) and use
+    # the difficulty's real range instead of a hardcoded 1-100
     st.session_state.attempts = 0
     st.session_state.secret = random.randint(low, high)
     st.session_state.status = "playing"
     st.session_state.history = []
     st.session_state.score = 0
-    st.session_state.round_id += 1  # <- clears the input field
+    st.session_state.round_id += 1  # clears the input field (using Claude)
 
     st.success("New game started.")
     st.rerun()
@@ -99,6 +104,7 @@ if st.session_state.status != "playing":
     st.stop()
 
 if submit:
+    #FIX:Any attempt counts, valid or not — using Claude
     st.session_state.attempts += 1
 
     ok, guess_int, err = parse_guess(raw_guess)
@@ -109,6 +115,8 @@ if submit:
     else:
         st.session_state.history.append(guess_int)
 
+        #FIX: compare against the real int secret (removed the str() glitch
+        # that corrupted the high/low check on even attempts)
         secret = st.session_state.secret
 
         outcome, message = check_guess(guess_int, secret)
@@ -130,8 +138,8 @@ if submit:
                 f"Final score: {st.session_state.score}"
             )
 
-    # Any attempt counts — valid or not. End the game if we're out of chances
-    # (unless that last guess was the winning one).
+    #FIX: Loss check lifted out so an invalid last guess can still end the game
+    # (unless that guess was the winning one) — using Claude
     if st.session_state.status == "playing" and st.session_state.attempts >= attempt_limit:
         st.session_state.status = "lost"
         st.error(

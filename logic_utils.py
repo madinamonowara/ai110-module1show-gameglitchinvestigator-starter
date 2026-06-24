@@ -1,3 +1,6 @@
+# Refactored logic into logic_utils.py using Claude
+# functions moved out of app.py so they can be imported and unit-tested
+
 def get_range_for_difficulty(difficulty: str):
     """Return (low, high) inclusive range for a given difficulty."""
     if difficulty == "Easy":
@@ -37,6 +40,7 @@ def check_guess(guess, secret):
     """
     if guess == secret:
         return "Win", "🎉 Correct!"
+    #FIX: directions were swapped — too high should send you LOWER, too low HIGHER
     if guess > secret:
         return "Too High", "📉 Go LOWER!"
     return "Too Low", "📈 Go HIGHER!"
